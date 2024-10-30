@@ -77,11 +77,11 @@
   };
 
   let busy = false;
-  const sendEmoji = async(file: File) => {
+  const sendEmoji = async (file: File) => {
     busy = true;
     await addEmoji(sendEmojiData, file);
     busy = false;
-  }
+  };
 </script>
 
 <div class="grid grid-cols-2 gap-2">
@@ -157,6 +157,9 @@
   <div class="card shadow-md">
     <div class="card-body">
       <div class="card-title">圧縮</div>
+      <div class="text-lg font-bold">
+        「申請情報」から画像をコピーして、「変換」をクリックして下さい
+      </div>
       <div>
         <label>ffmpeg引数</label>
         <input
@@ -284,10 +287,7 @@
             type="text"
             class="input input-xs md:input-md input-bordered md:w-full"
             onchange={() => {
-              sendEmojiData.aliases = [
-                ...sendEmojiData.aliases,
-                taginput,
-              ]
+              sendEmojiData.aliases = [...sendEmojiData.aliases, taginput];
               taginput = "";
             }}
           />
@@ -326,18 +326,33 @@
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button class="btn btn-lg btn-neutral {(busy) ? 'btn-disabled' : ''}" onclick={() => {sendEmoji(beforeConvertFile)}}>変換前を登録</button>
-          <button class="btn btn-lg btn-primary {(busy) ? 'btn-disabled' : ''}" onclick={() => {sendEmoji(afterConvertFile)}}>変換前を登録</button>
+          <button
+            class="btn btn-lg btn-neutral {busy || beforeConvertFile == null
+              ? 'btn-disabled'
+              : ''}"
+            onclick={() => {
+              sendEmoji(beforeConvertFile);
+            }}>変換前を登録</button
+          >
+          <button
+            class="btn btn-lg btn-primary {busy || afterConvertFile == null
+              ? 'btn-disabled'
+              : ''}"
+            onclick={() => {
+              sendEmoji(afterConvertFile);
+            }}>変換後を登録</button
+          >
         </div>
       </div>
       <div class="flex flex-wrap gap-4">
         {#each sendEmojiData.aliases as tag, index}
-          <button class="btn rounded-full btn-outline btn-sm" onclick={
-            () => {
+          <button
+            class="btn rounded-full btn-outline btn-sm"
+            onclick={() => {
               sendEmojiData.aliases.splice(index, 1);
-              sendEmojiData.aliases = sendEmojiData.aliases
-            }
-          }>
+              sendEmojiData.aliases = sendEmojiData.aliases;
+            }}
+          >
             {tag}
             <div class="badge badge-error">×</div>
           </button>
