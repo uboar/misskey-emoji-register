@@ -16,6 +16,7 @@
   let afterConvertImg: HTMLImageElement;
   let beforeConvertFile: File;
   let afterConvertFile: File;
+  let inputFile: FileList;
 
   const FFmpegArgsTemplates = {
     ロスレス: "-lossless 1",
@@ -48,6 +49,15 @@
           afterConvertImg.src = URL.createObjectURL(afterConvertFile);
         }
       }
+    }
+  };
+
+  const imageConvertwithUpload = async () => {
+    beforeConvertFile = inputFile[0];
+    beforeConvertImg.src = URL.createObjectURL(beforeConvertFile);
+    afterConvertFile = await convert(beforeConvertFile, ffmpegArgs);
+    if (afterConvertFile != null) {
+      afterConvertImg.src = URL.createObjectURL(afterConvertFile);
     }
   };
 
@@ -158,7 +168,8 @@
     <div class="card-body">
       <div class="card-title">圧縮</div>
       <div class="text-lg font-bold">
-        「申請情報」から画像をコピーして、「変換」をクリックして下さい
+        「申請情報」から画像をコピーして、「変換」をクリックして下さい<br />
+        GIFアニメは一度画像をダウンロードしてからアップロード変換を選択して下さい
       </div>
       <div>
         <label>ffmpeg引数</label>
@@ -179,9 +190,27 @@
           {/each}
         </div>
       </div>
-      <button class="btn btn-block shadow btn-info" onclick={imageConvert}>
+      <button
+        class="btn btn-lg btn-block shadow btn-info"
+        onclick={imageConvert}
+      >
         変換
       </button>
+      <div class="grid grid-cols-2">
+        <label class="form-control w-full">
+          <input
+            type="file"
+            bind:files={inputFile}
+            class="file-input file-input-bordered"
+          />
+        </label>
+        <button
+          class="btn btn-block shadow h-full btn-warning"
+          onclick={imageConvertwithUpload}
+        >
+          アップロード変換
+        </button>
+      </div>
       <div class="grid grid-cols-2 gap-4 bg-base-200 shadow rounded-md">
         <div class="m-4">
           変換前
