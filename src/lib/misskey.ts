@@ -21,7 +21,7 @@ const TAGSPLITCHAR = " "
 
 export const init = () => {
   miApi = new api.APIClient({
-    origin: "https://" + get(serverUrl),
+    origin: get(serverUrl),
     credential: get(accessToken),
   })
 }

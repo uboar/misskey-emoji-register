@@ -4,14 +4,31 @@
   import { getNote, splitEmojis } from "../lib/misskey";
 
   let noteId = "";
+  
+  let sanitizedNoteId = "";
+  let sanitizedServerUrl = "";
+
+  $: {
+    sanitizedNoteId = noteId
+      .replace(/.*\//, "");
+  }
+
+  $: {
+    const sanitizedServerUrlTail = $serverUrl
+      .replace(/^\w*:\/\//, "")
+      .replace(/\/$/, "");
+
+    sanitizedServerUrl = [
+      sanitizedServerUrlTail.startsWith("localhost:") ? "http://" : "https://",
+      sanitizedServerUrlTail,
+    ].join("");
+  }
 
   let noteResponse = "";
 
   const getNoteData = async () => {
-    noteId = noteId
-      .replace("https://", "")
-      .replace(get(serverUrl), "")
-      .replace("/notes/", "");
+    noteId = sanitizedNoteId;
+    serverUrl.set(sanitizedServerUrl);
 
     const noteData = await getNote(noteId);
     note.set(noteData);
@@ -29,9 +46,20 @@
       bind:value={$serverUrl}
       type="text"
       class="input input-xs md:input-md input-bordered md:w-64"
-      placeholder="EX:voskey.icalo.net"
+      placeholder="EX: https://voskey.icalo.net"
       oninput={updateCookie}
     />
+    {#if $serverUrl !== sanitizedServerUrl}
+      <div class="text-sm mt-1">
+        {sanitizedServerUrl} に自動修正されます 
+        <button
+          class="btn btn-xs inline-block"
+          onclick={() => serverUrl.set(sanitizedServerUrl)}
+        >
+        今すぐ修正
+        </button>
+      </div>
+    {/if}
   </div>
   <div>
     <label for="access-token">アクセストークン</label>
@@ -44,22 +72,34 @@
     />
   </div>
   <div>
-    <label for="server-url">ノートID</label>
+    <label for="note-id">ノートID</label>
     <input
       id="note-id"
       bind:value={noteId}
       type="text"
       class="input input-xs md:input-md input-bordered md:w-64"
+      oninput={updateCookie}
     />
+    {#if noteId !== sanitizedNoteId}
+      <div class="text-sm mt-1">
+        {sanitizedNoteId} に自動修正されます 
+        <button
+          class="btn btn-xs inline-block"
+          onclick={() => noteId = sanitizedNoteId}
+        >
+        今すぐ修正
+        </button>
+      </div>
+    {/if}
   </div>
   <div>
-    <label for="server-url">デフォルトffmpeg引数</label>
+    <label for="default-ffmpeg-args">デフォルトffmpeg引数</label>
     <input
       id="default-ffmpeg-args"
       bind:value={$defaultFFMpegArgs}
       type="text"
       class="input input-xs md:input-md input-bordered md:w-64"
-      placeholder="EX:voskey.icalo.net"
+      placeholder="EX: -lossless 1"
       oninput={updateCookie}
     />
   </div>
