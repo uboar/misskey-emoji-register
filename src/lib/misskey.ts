@@ -3,7 +3,7 @@ import { api } from "misskey-js";
 import { serverUrl, accessToken, type Emoji } from "./store";
 import { get } from "svelte/store";
 import type { APIClient } from "misskey-js/api.js";
-import type { AdminEmojiAddRequest, DriveFilesCreateRequest, DriveFilesCreateResponse, Note } from "misskey-js/entities.js";
+import type { AdminEmojiAddRequest, DriveFilesCreateResponse, Note } from "misskey-js/entities.js";
 
 
 let miApi: APIClient;

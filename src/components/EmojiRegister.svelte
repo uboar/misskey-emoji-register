@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { toBlobURL } from "@ffmpeg/util";
   import { defaultFFMpegArgs, note, serverUrl, type Emoji } from "../lib/store";
-  import { onMount } from "svelte";
   import { get } from "svelte/store";
   import { convert } from "../lib/ffmpeg";
   import type { AdminEmojiAddRequest } from "misskey-js/entities.js";
