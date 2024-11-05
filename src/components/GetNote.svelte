@@ -1,16 +1,22 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { accessToken, serverUrl, note, updateCookie, emojis, defaultFFMpegArgs } from "../lib/store";
+  import {
+    accessToken,
+    serverUrl,
+    note,
+    updateCookie,
+    emojis,
+    defaultFFMpegArgs,
+  } from "../lib/store";
   import { getNote, splitEmojis } from "../lib/misskey";
 
   let noteId = "";
-  
+
   let sanitizedNoteId = "";
   let sanitizedServerUrl = "";
 
   $: {
-    sanitizedNoteId = noteId
-      .replace(/.*\//, "");
+    sanitizedNoteId = noteId.replace(/.*\//, "");
   }
 
   $: {
@@ -45,18 +51,18 @@
       id="server-url"
       bind:value={$serverUrl}
       type="text"
-      class="input input-xs md:input-md input-bordered md:w-64"
+      class="input input-xs input-bordered md:input-md md:w-64"
       placeholder="EX: https://voskey.icalo.net"
       oninput={updateCookie}
     />
     {#if $serverUrl !== sanitizedServerUrl}
-      <div class="text-sm mt-1">
-        {sanitizedServerUrl} に自動修正されます 
+      <div class="mt-1 text-sm">
+        {sanitizedServerUrl} に自動修正されます
         <button
           class="btn btn-xs inline-block"
           onclick={() => serverUrl.set(sanitizedServerUrl)}
         >
-        今すぐ修正
+          今すぐ修正
         </button>
       </div>
     {/if}
@@ -67,7 +73,7 @@
       id="access-token"
       bind:value={$accessToken}
       type="password"
-      class="input input-xs md:input-md input-bordered md:w-64"
+      class="input input-xs input-bordered md:input-md md:w-64"
       oninput={updateCookie}
     />
   </div>
@@ -77,17 +83,17 @@
       id="note-id"
       bind:value={noteId}
       type="text"
-      class="input input-xs md:input-md input-bordered md:w-64"
+      class="input input-xs input-bordered md:input-md md:w-64"
       oninput={updateCookie}
     />
     {#if noteId !== sanitizedNoteId}
-      <div class="text-sm mt-1">
-        {sanitizedNoteId} に自動修正されます 
+      <div class="mt-1 text-sm">
+        {sanitizedNoteId} に自動修正されます
         <button
           class="btn btn-xs inline-block"
-          onclick={() => noteId = sanitizedNoteId}
+          onclick={() => (noteId = sanitizedNoteId)}
         >
-        今すぐ修正
+          今すぐ修正
         </button>
       </div>
     {/if}
@@ -98,7 +104,7 @@
       id="default-ffmpeg-args"
       bind:value={$defaultFFMpegArgs}
       type="text"
-      class="input input-xs md:input-md input-bordered md:w-64"
+      class="input input-xs input-bordered md:input-md md:w-64"
       placeholder="EX: -lossless 1"
       oninput={updateCookie}
     />

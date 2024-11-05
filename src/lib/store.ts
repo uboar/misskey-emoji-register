@@ -4,16 +4,16 @@ import { init as apiInit } from "./misskey";
 import type { DriveFile, Note } from "misskey-js/entities.js";
 
 export type Emoji = {
- originalText: string
- name: string
- license: string 
- from: string
- description: string
- tag: string[]
- category: string
- isSensitive: string
- localOnly: string
- file: DriveFile
+  originalText: string
+  name: string
+  license: string
+  from: string
+  description: string
+  tag: string[]
+  category: string
+  isSensitive: string
+  localOnly: string
+  file: DriveFile
 }
 
 export const serverUrl = writable("");
@@ -24,13 +24,13 @@ export const emojis = writable<Emoji[]>();
 
 export const getCookie = () => {
   const cookies = document.cookie;
-  if(cookies !== ""){
+  if (cookies !== "") {
     const strArr = cookies.split("; ");
     strArr.forEach((elem) => {
-      if(elem.startsWith("accessToken")) {
+      if (elem.startsWith("accessToken")) {
         accessToken.set(elem.replace(/accessToken=/, ""));
       }
-      if(elem.startsWith("serverUrl")) {
+      if (elem.startsWith("serverUrl")) {
         serverUrl.set(elem.replace(/serverUrl=/, ""));
       }
     })

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import EmojiRegister from "./components/EmojiRegister.svelte";
-import GetNote from "./components/GetNote.svelte";
+  import GetNote from "./components/GetNote.svelte";
 
   import { emojis, getCookie } from "./lib/store";
   import { load } from "./lib/ffmpeg";
@@ -12,9 +12,9 @@ import GetNote from "./components/GetNote.svelte";
 
   onMount(async () => {
     await load();
-  })
+  });
 
-  const tabSelect = async(tabNum: number) => {
+  const tabSelect = async (tabNum: number) => {
     selectedTab = -1;
     await tick();
     selectedTab = tabNum;

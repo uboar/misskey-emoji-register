@@ -99,14 +99,14 @@
     <div class="card-body">
       <div class="card-title text-lg">申請情報</div>
       <div class="flex flex-wrap gap-2">
-        <img class="w-4 object-contain bg-black" src={emoji.file.url} />
-        <img class="w-4 object-contain bg-white" src={emoji.file.url} />
-        <img class="w-8 object-contain bg-black" src={emoji.file.url} />
-        <img class="w-8 object-contain bg-white" src={emoji.file.url} />
-        <img class="w-16 object-contain bg-black" src={emoji.file.url} />
-        <img class="w-16 object-contain bg-white" src={emoji.file.url} />
-        <img class="w-32 object-contain bg-black" src={emoji.file.url} />
-        <img class="w-32 object-contain bg-white" src={emoji.file.url} />
+        <img class="w-4 bg-black object-contain" src={emoji.file.url} />
+        <img class="w-4 bg-white object-contain" src={emoji.file.url} />
+        <img class="w-8 bg-black object-contain" src={emoji.file.url} />
+        <img class="w-8 bg-white object-contain" src={emoji.file.url} />
+        <img class="w-16 bg-black object-contain" src={emoji.file.url} />
+        <img class="w-16 bg-white object-contain" src={emoji.file.url} />
+        <img class="w-32 bg-black object-contain" src={emoji.file.url} />
+        <img class="w-32 bg-white object-contain" src={emoji.file.url} />
       </div>
       <table class="table table-zebra table-fixed">
         <tbody>
@@ -154,7 +154,7 @@
           </tr>
           <tr>
             <th>ファイルURL</th>
-            <td class="text-wrap max-w-24"
+            <td class="max-w-24 text-wrap"
               ><a class="link" href={emoji.file.url} target="_blank"
                 >{emoji.file.url}</a
               ></td
@@ -177,12 +177,12 @@
           id="ffmpeg-args"
           bind:value={ffmpegArgs}
           type="text"
-          class="input input-xs md:input-md input-bordered md:w-full"
+          class="input input-xs input-bordered md:input-md md:w-full"
         />
         <div class="join mt-4 flex-wrap">
           {#each Object.entries(FFmpegArgsTemplates) as [key, value]}
             <button
-              class="btn btn-sm btn-outline join-item"
+              class="btn btn-outline join-item btn-sm"
               onclick={() => {
                 ffmpegArgs = value;
               }}>{key}</button
@@ -191,7 +191,7 @@
         </div>
       </div>
       <button
-        class="btn btn-lg btn-block shadow btn-info"
+        class="btn btn-info btn-lg btn-block shadow"
         onclick={imageConvert}
       >
         変換
@@ -205,18 +205,18 @@
           />
         </label>
         <button
-          class="btn btn-block shadow h-full btn-warning"
+          class="btn btn-warning btn-block h-full shadow"
           onclick={imageConvertwithUpload}
         >
           アップロード変換
         </button>
       </div>
-      <div class="grid grid-cols-2 gap-4 bg-base-200 shadow rounded-md">
+      <div class="grid grid-cols-2 gap-4 rounded-md bg-base-200 shadow">
         <div class="m-4">
           変換前
           <img
             bind:this={beforeConvertImg}
-            class="w-32 object-contain bg-black"
+            class="w-32 bg-black object-contain"
             onload={beforeConvertLoaded}
           />
           {#if beforeConvertFile != null}
@@ -250,7 +250,7 @@
           変換後
           <img
             bind:this={afterConvertImg}
-            class="w-32 object-contain bg-black"
+            class="w-32 bg-black object-contain"
             onload={afterConvertLoaded}
           />
           {#if afterConvertFile != null}
@@ -295,7 +295,7 @@
             id="name"
             bind:value={sendEmojiData.name}
             type="text"
-            class="input input-xs md:input-md input-bordered md:w-full"
+            class="input input-xs input-bordered md:input-md md:w-full"
           />
         </div>
         <div class="form-control">
@@ -304,7 +304,7 @@
             id="license"
             bind:value={sendEmojiData.license}
             type="text"
-            class="input input-xs md:input-md input-bordered md:w-full"
+            class="input input-xs input-bordered md:input-md md:w-full"
           />
         </div>
 
@@ -314,7 +314,7 @@
             id="tag"
             bind:value={taginput}
             type="text"
-            class="input input-xs md:input-md input-bordered md:w-full"
+            class="input input-xs input-bordered md:input-md md:w-full"
             onchange={() => {
               sendEmojiData.aliases = [...sendEmojiData.aliases, taginput];
               taginput = "";
@@ -329,7 +329,7 @@
             id="category"
             bind:value={sendEmojiData.category}
             type="text"
-            class="input input-xs md:input-md input-bordered md:w-full"
+            class="input input-xs input-bordered md:input-md md:w-full"
           />
         </div>
         <div class="flex gap-8">
@@ -356,7 +356,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2">
           <button
-            class="btn btn-lg btn-neutral {busy || beforeConvertFile == null
+            class="btn btn-neutral btn-lg {busy || beforeConvertFile == null
               ? 'btn-disabled'
               : ''}"
             onclick={() => {
@@ -364,7 +364,7 @@
             }}>変換前を登録</button
           >
           <button
-            class="btn btn-lg btn-primary {busy || afterConvertFile == null
+            class="btn btn-primary btn-lg {busy || afterConvertFile == null
               ? 'btn-disabled'
               : ''}"
             onclick={() => {
@@ -376,7 +376,7 @@
       <div class="flex flex-wrap gap-4">
         {#each sendEmojiData.aliases as tag, index}
           <button
-            class="btn rounded-full btn-outline btn-sm"
+            class="btn btn-outline btn-sm rounded-full"
             onclick={() => {
               sendEmojiData.aliases.splice(index, 1);
               sendEmojiData.aliases = sendEmojiData.aliases;

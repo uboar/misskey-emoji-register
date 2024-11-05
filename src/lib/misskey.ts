@@ -85,7 +85,8 @@ export const addEmoji = async (request: AdminEmojiAddRequest, file: File) => {
   formData.append("i", get(accessToken));
   formData.append("file", file);
   const createFile = await (await miApi.fetch(`${get(serverUrl)}/api/drive/files/create`, {
-    method: "POST", body: formData })).json() as any as DriveFilesCreateResponse
+    method: "POST", body: formData
+  })).json() as any as DriveFilesCreateResponse
   request.fileId = createFile.id;
   await miApi.request("admin/emoji/add", request);
 }
