@@ -38,7 +38,7 @@
 
         const reader = new FileReader();
         reader.addEventListener("load", () => {
-          beforeConvertImg.src = reader.result;
+          beforeConvertImg.src = reader.result as string;
         });
         beforeConvertFile = new File([blob], emoji.file.name, {
           type: emoji.file.type,
@@ -309,17 +309,17 @@
         </div>
 
         <div class="form-control">
-          <label> <span class="label-text">タグ</span></label>
+          <label> <span class="label-text">タグ</span>
           <input
             id="tag"
             bind:value={taginput}
             type="text"
             class="input input-xs input-bordered md:input-md md:w-full"
             onchange={() => {
-              sendEmojiData.aliases = [...sendEmojiData.aliases, taginput];
+              sendEmojiData.aliases = [...sendEmojiData.aliases!, taginput];
               taginput = "";
             }}
-          />
+          /></label>
         </div>
       </div>
       <div>
@@ -374,11 +374,11 @@
         </div>
       </div>
       <div class="flex flex-wrap gap-4">
-        {#each sendEmojiData.aliases as tag, index}
+        {#each sendEmojiData.aliases! as tag, index}
           <button
             class="btn btn-outline btn-sm rounded-full"
             onclick={() => {
-              sendEmojiData.aliases.splice(index, 1);
+              sendEmojiData.aliases!.splice(index, 1);
               sendEmojiData.aliases = sendEmojiData.aliases;
             }}
           >
