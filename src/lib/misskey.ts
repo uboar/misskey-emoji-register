@@ -17,7 +17,7 @@ const TAGCHAR = "⑤"
 const CATEGORYCHAR = "⑥"
 const ISSENSITIVECHAR = "⑦"
 const LOCALONLYCHAR = "⑧"
-const TAGSPLITCHAR = " "
+const TAGSPLITCHAR = / |　/
 
 export const init = () => {
   miApi = new api.APIClient({

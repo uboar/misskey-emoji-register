@@ -17,6 +17,7 @@
   let inputFile: FileList;
 
   const FFmpegArgsTemplates = {
+    アカーシャ秘伝レシピ: "-lossless 1 -compression_level 4",
     ロスレス: "-lossless 1",
     ロスレスGIFアニメ: "-lossless 1 -loop 0",
     劣化圧縮: "-crf 1",
