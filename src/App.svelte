@@ -29,18 +29,23 @@
       </div>
     </div>
 
-    <div role="tablist" class="tabs tabs-bordered bg-base-300 shadow">
+    <div role="tablist" class="tabs tabs-bordered bg-base-300 shadow overflow-auto">
       <button
         role="tab"
-        class="tab {selectedTab === 0 ? 'tab-active' : ''}"
+        class="tab {selectedTab === 0 ? 'tab-active' : ''} min-w-max"
         onclick={() => tabSelect(0)}>ノート取得</button
       >
       {#each $emojis as emoji, index}
         <button
           role="tab"
-          class="tab {selectedTab === 1 + index ? 'tab-active' : ''}"
-          onclick={() => tabSelect(1 + index)}>{1 + index}</button
-        >
+          class="tab {selectedTab === 1 + index ? 'tab-active' : ''} overflow-hidden"
+          onclick={() => tabSelect(1 + index)}
+	>
+	  <div class="min-w-4 flex flex-row">
+            <img class="w-4 object-contain" src={emoji.file.url} />
+            <span class="px-2 whitespace-nowrap">:{emoji.name}:</span>
+          </div>
+	</button>
       {/each}
     </div>
 
