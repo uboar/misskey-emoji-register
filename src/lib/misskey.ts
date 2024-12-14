@@ -8,16 +8,24 @@ import type { AdminEmojiAddRequest, DriveFilesCreateResponse, Note } from "missk
 
 let miApi: APIClient;
 
-const SPLITCHAR = "▼"
 const NAMECHAR = "①"
-const LICENSECHAR = "②"
-const FROMCHAR = "③"
-const DESCRIPTIONCHAR = "④"
-const TAGCHAR = "⑤"
-const CATEGORYCHAR = "⑥"
-const ISSENSITIVECHAR = "⑦"
-const LOCALONLYCHAR = "⑧"
+const SPLITCHAR = "▼"
 const TAGSPLITCHAR = / |　/
+const REPEATCHAR = "★"
+const EMOJINAME_REGEXP = /:([a-z0-9_+-]+):/i
+
+// 読み取りはこの順番に行われる。入れ替わりがあると正しく読み取られない
+const requestFields = [
+  ["①", (text, emoji) => emoji.name = text.match(EMOJINAME_REGEXP)[1]],
+  ["②", (text, emoji) => emoji.license = text],
+  ["③", (text, emoji) => emoji.from = text],
+  ["④", (text, emoji) => emoji.description = text],
+  ["⑤", (text, emoji) => emoji.tag = text.split(TAGSPLITCHAR)],
+  // 以下docに定義なし フォーマットの定義が必要
+  ["⑥", (text, emoji) => emoji.category = text],
+  ["⑦", (text, emoji) => emoji.isSensitive = !!text],
+  ["⑧", (text, emoji) => emoji.localOnly = !!text],
+];
 
 export const init = () => {
   miApi = new api.APIClient({
@@ -45,34 +53,50 @@ export const splitEmojis = (note: Note): Emoji[] => {
     splitText.splice(0, 1);
   }
 
-  splitText?.forEach((val, index) => {
-    if (val.includes(NAMECHAR) && note.files != null) {
-      const emoji: Emoji = {
-        name: "",
-        license: "",
-        from: "",
-        description: "",
-        tag: [],
-        originalText: val,
-        category: "",
-        isSensitive: "",
-        localOnly: "",
-        file: note.files[index]
-      }
+  let prevFieldTexts: string[] = [];
 
-      const lines = val.split("\n");
-      lines.forEach((line) => {
-        if (line.includes(NAMECHAR)) emoji.name = line.replace(NAMECHAR, "").replaceAll(":", "");
-        if (line.includes(LICENSECHAR)) emoji.license = line.replace(LICENSECHAR, "")
-        if (line.includes(FROMCHAR)) emoji.from = line.replace(FROMCHAR, "")
-        if (line.includes(DESCRIPTIONCHAR)) emoji.description = line.replace(DESCRIPTIONCHAR, "")
-        if (line.includes(TAGCHAR)) emoji.tag = line.replace(TAGCHAR, "").split(TAGSPLITCHAR).map((val) => val.replace(TAGSPLITCHAR, ""))
-        if (line.includes(CATEGORYCHAR)) emoji.category = line.replace(CATEGORYCHAR, "")
-        if (line.includes(ISSENSITIVECHAR)) emoji.category = line.replace(ISSENSITIVECHAR, "")
-        if (line.includes(LOCALONLYCHAR)) emoji.category = line.replace(LOCALONLYCHAR, "")
-      })
-      emojis.push(emoji);
+  splitText.forEach((emojiText, emojiIdx) => {
+    if (!emojiText.includes(NAMECHAR)) return;
+    if (note.files?.[emojiIdx] == null) return;
+
+    const positions = [];
+    for (const [numbering] of requestFields) {
+      const pos = emojiText.indexOf(numbering, positions.at(-1) ?? 0); 
+      if (pos === -1) break;
+      positions.push({ pos, skip: numbering.length });
     }
+    positions.push({ pos: emojiText.length, skip: 0});
+
+    const fieldTexts: string[] = [];
+    positions.reduce((start, end) => {
+      fieldTexts.push(emojiText.slice(start.pos + start.skip, end.pos).trim());
+      return end;
+    });
+
+    fieldTexts.map((text, i) => {
+      if (text === REPEATCHAR) fieldTexts[i] = prevFieldTexts[i];
+    });
+
+    prevFieldTexts = fieldTexts;
+
+    const emoji: Emoji = {
+      name: "",
+      license: "",
+      from: "",
+      description: "",
+      tag: [],
+      originalText: emojiText,
+      category: "",
+      isSensitive: "",
+      localOnly: "",
+      file: note.files[emojiIdx]
+    }
+
+    fieldTexts.forEach((text, idx) => {
+      requestFields[idx][1](text, emoji);
+    });
+
+    emojis.push(emoji);
   })
 
   return emojis

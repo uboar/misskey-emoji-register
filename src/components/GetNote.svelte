@@ -7,7 +7,7 @@
     emojis,
     defaultFFMpegArgs,
   } from "../lib/store";
-  import { getNote, splitEmojis } from "../lib/misskey";
+  import { getNote, splitEmojis, init } from "../lib/misskey";
 
   let noteId = "";
 
@@ -34,6 +34,7 @@
   const getNoteData = async () => {
     noteId = sanitizedNoteId;
     serverUrl.set(sanitizedServerUrl);
+    init();
 
     const noteData = await getNote(noteId);
     note.set(noteData);
