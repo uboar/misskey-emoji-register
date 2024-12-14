@@ -34,6 +34,7 @@
   const getNoteData = async () => {
     noteId = sanitizedNoteId;
     serverUrl.set(sanitizedServerUrl);
+    updateCookie();
     init();
 
     const noteData = await getNote(noteId);
