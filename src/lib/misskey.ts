@@ -15,16 +15,16 @@ const REPEATCHAR = "★"
 const EMOJINAME_REGEXP = /:([a-z0-9_+-]+):/i
 
 // 読み取りはこの順番に行われる。入れ替わりがあると正しく読み取られない
-const requestFields = [
-  ["①", (text, emoji) => emoji.name = text.match(EMOJINAME_REGEXP)[1]],
+const requestFields: [string, (text: string, emoji: Emoji) => void][] = [
+  ["①", (text, emoji) => emoji.name = text.match(EMOJINAME_REGEXP)![1]],
   ["②", (text, emoji) => emoji.license = text],
   ["③", (text, emoji) => emoji.from = text],
   ["④", (text, emoji) => emoji.description = text],
   ["⑤", (text, emoji) => emoji.tag = text.split(TAGSPLITCHAR)],
   // 以下docに定義なし フォーマットの定義が必要
   ["⑥", (text, emoji) => emoji.category = text],
-  ["⑦", (text, emoji) => emoji.isSensitive = !!text],
-  ["⑧", (text, emoji) => emoji.localOnly = !!text],
+  ["⑦", (text, emoji) => emoji.isSensitive = text],
+  ["⑧", (text, emoji) => emoji.localOnly = text],
 ];
 
 export const init = () => {
@@ -61,7 +61,9 @@ export const splitEmojis = (note: Note): Emoji[] => {
 
     const positions = [];
     for (const [numbering] of requestFields) {
-      const pos = emojiText.indexOf(numbering, positions.at(-1) ?? 0); 
+      const prevPosObj = positions.at(-1);
+      const prevPos = prevPosObj == null ? 0 : prevPosObj.pos + prevPosObj.skip;
+      const pos = emojiText.indexOf(numbering, prevPos); 
       if (pos === -1) break;
       positions.push({ pos, skip: numbering.length });
     }
