@@ -11,12 +11,15 @@
   }
     
   async function updateNote() {
-    const emojisData = splitEmojis($note);
-    emojis.set(emojisData);
+    $emojis = splitEmojis($note);
   };
 </script>
 
-<div>
-  <textarea bind:value={noteText}></textarea>
+<div class="grid gap-4">
+  <textarea
+    class="textarea textarea-primary h-32"
+    style="height: 50vh"
+    bind:value={noteText}
+  ></textarea>
   <button class="btn btn-primary" onclick={updateNote}>更新</button>
 </div>
