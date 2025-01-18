@@ -8,6 +8,9 @@
     defaultFFMpegArgs,
   } from "../lib/store";
   import { getNote, splitEmojis, init } from "../lib/misskey";
+  import { MiAuth } from "../lib/miauth.svelte.ts";
+
+  const miauth = new MiAuth();
 
   let noteId = "";
 
@@ -23,7 +26,7 @@
       .replace(/^\w*:\/\//, "")
       .replace(/\/$/, "");
 
-    sanitizedServerUrl = [
+    sanitizedServerUrl = $serverUrl && [
       sanitizedServerUrlTail.startsWith("localhost:") ? "http://" : "https://",
       sanitizedServerUrlTail,
     ].join("");
@@ -77,6 +80,22 @@
       class="input input-xs input-bordered md:input-md md:w-64"
       oninput={updateCookie}
     />
+    {#if $serverUrl}
+      <button
+        class="btn btn-xs inline-block"
+        onclick={() => open(miauth.getUrl())}
+      >
+        認証でトークンを生成
+      </button>
+    {/if}
+    {#if miauth.isTokenReady}
+      <button
+        class="btn btn-xs inline-block"
+        onclick={() => miauth.requestToken()}
+      >
+        認証完了後クリック
+      </button>
+    {/if}
   </div>
   <div>
     <label for="note-id">ノートID</label>
