@@ -11,7 +11,7 @@ let miApi: APIClient;
 const NAMECHAR = "①"
 const SPLITCHAR = "▼"
 const TAGSPLITCHAR = / |　/
-const REPEATCHAR = "★"
+const REPEATCHAR_REGEXP = /^(★|☆)$/
 const EMOJINAME_REGEXP = /:([a-z0-9_+-]+):/i
 
 // 読み取りはこの順番に行われる。入れ替わりがあると正しく読み取られない
@@ -76,7 +76,7 @@ export const splitEmojis = (note: Note): Emoji[] => {
     });
 
     fieldTexts.map((text, i) => {
-      if (text === REPEATCHAR) fieldTexts[i] = prevFieldTexts[i];
+      if (text.match(REPEATCHAR_REGEXP)) fieldTexts[i] = prevFieldTexts[i];
     });
 
     prevFieldTexts = fieldTexts;
