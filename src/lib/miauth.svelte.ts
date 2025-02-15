@@ -2,9 +2,10 @@ import { api } from "misskey-js";
 import { v4 as uuid } from "uuid";
 import { serverUrl, accessToken } from "./store";
 import { get } from "svelte/store";
+import type { MiauthGenTokenResponse } from "misskey-js/entities.js";
 
 export class MiAuth {
-  private sessionId = $state(null);
+  private sessionId = $state(null as null | string);
   constructor() {}
 
   readonly isTokenReady = $derived(this.sessionId != null);
@@ -17,12 +18,12 @@ export class MiAuth {
       this.sessionId = null;
       unsubscribe();
     });
-    return `${get(serverUrl)}/miauth/${this.sessionId}?name=misskey-emoji-register&permission=write:admin:drive,write:admin:emoji`;
+    return `${get(serverUrl)}/miauth/${this.sessionId}?name=misskey-emoji-register&permission=write:drive,write:admin:emoji`;
   }
   async requestToken(): Promise<void> {
     if (this.sessionId == null) throw new Error("token is not ready");
     const client = new api.APIClient({ origin: get(serverUrl) });
-    const { token } = await client.request(`miauth/${this.sessionId}/check`);
+    const { token } = await client.request(`miauth/${this.sessionId}/check` as any, {}) as any as MiauthGenTokenResponse;
     this.sessionId = null;
     accessToken.set(token);
   }
