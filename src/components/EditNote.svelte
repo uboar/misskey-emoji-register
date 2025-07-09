@@ -3,7 +3,7 @@
     note,
     emojis,
   } from "../lib/store";
-  import { splitEmojis } from "../lib/misskey";
+  import { splitEmojis } from "../lib/splitEmojis";
 
   let noteText = $note.text;
   $: {

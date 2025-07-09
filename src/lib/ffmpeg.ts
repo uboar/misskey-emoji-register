@@ -32,9 +32,11 @@ export const convert = async (file: File, args: string): Promise<File> => {
     '-i',
     file.name,
     ...args.split(' '),
-    `convert.webp`,
+    'converted.webp',
   ]);
-  const data = await ffmpeg.readFile('convert.webp');
+  const data = await ffmpeg.readFile('converted.webp');
+  await ffmpeg.deleteFile(file.name);
+  await ffmpeg.deleteFile('converted.webp');
   return new File(
     [(data as Uint8Array).buffer],
     `${file.name.split('.').slice(0, -1).join('.')}.webp`,

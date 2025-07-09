@@ -25,7 +25,7 @@
 <main>
   <div class="h-screen w-screen">
     <div class="navbar bg-base-300">
-      <div class="navbar-start">
+      <div class="navbar-start w-full break-keep">
         <h1 class="text-xl">Misskey emoji Register</h1>
       </div>
     </div>
